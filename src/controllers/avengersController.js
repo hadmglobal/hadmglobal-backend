@@ -12,7 +12,7 @@ import { Dashboard } from './screens/dashboardHandler.js';
 import { commissionHandler } from './screens/commissionHandler.js';
 import { profileHandler } from './screens/profileHandler.js';
 export const avengersController = async (req, res) => {
-  const { userId, screen , isAdmin = false } = req.body;
+  const { userId, screen, isAdmin = false } = req.body;
 
   try {
     if (!userId || !screen) {
@@ -50,15 +50,17 @@ export const avengersController = async (req, res) => {
       case "genOne":
       case "genTwo":
       case "genThree":
+      case "genFour":
+      case "genFive":
         response = await handleMemberScreen(userId, screen);
         break;
       case "teams":
-        response = await getTeamsData(userId,isAdmin);
+        response = await getTeamsData(userId, isAdmin);
         break;
       case "commission":
         response = await commissionHandler(userId);
         break;
-      case "gameCurrentPlan": 
+      case "gameCurrentPlan":
         const userResult = await pool.query(userQueries.getUserLevelById, [userId]);
         if (userResult.rows.length === 0) {
           return res.status(404).json({
@@ -77,7 +79,7 @@ export const avengersController = async (req, res) => {
             currentPlan: userlevel || "Free",
           },
         }
-        break ;
+        break;
       case "Dashboard":
         response = await Dashboard();
         break;

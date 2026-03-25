@@ -134,6 +134,40 @@ RETURNING *;
     )
     WHERE "userId" = $2;
   `,
+  appendFourthGen: `
+    UPDATE users.userDetails
+    SET "fourthGen" = COALESCE(
+      (
+        CASE
+          WHEN NOT (EXISTS (
+            SELECT 1 FROM jsonb_array_elements_text(COALESCE("fourthGen",'[]'::jsonb)) AS elem
+            WHERE elem = $1
+          ))
+          THEN COALESCE("fourthGen",'[]'::jsonb) || to_jsonb(ARRAY[$1]::text[])
+          ELSE "fourthGen"
+        END
+      ),
+      to_jsonb(ARRAY[$1]::text[])
+    )
+    WHERE "userId" = $2;
+  `,
+  appendFifthGen: `
+    UPDATE users.userDetails
+    SET "fifthGen" = COALESCE(
+      (
+        CASE
+          WHEN NOT (EXISTS (
+            SELECT 1 FROM jsonb_array_elements_text(COALESCE("fifthGen",'[]'::jsonb)) AS elem
+            WHERE elem = $1
+          ))
+          THEN COALESCE("fifthGen",'[]'::jsonb) || to_jsonb(ARRAY[$1]::text[])
+          ELSE "fifthGen"
+        END
+      ),
+      to_jsonb(ARRAY[$1]::text[])
+    )
+    WHERE "userId" = $2;
+  `,
   getGenerationMembers: `
     SELECT 
       "firstGen",
@@ -156,8 +190,13 @@ RETURNING *;
   `,
 
   getUserGenerations: `
-    SELECT "firstGen", "secondGen", "thirdGen", "userName"
+    SELECT "firstGen", "secondGen", "thirdGen","fourthGen","fifthGen", "userName"
     FROM users.userDetails
+    WHERE "userId" = $1;
+  `,
+  getGenCommissions: `
+    SELECT "firstGenCommission","secondGenCommission","thirdGenCommission","fourthGenCommission","fifthGenCommission"
+    FROM users.wallets
     WHERE "userId" = $1;
   `,
   getUsersByIds: `
@@ -250,8 +289,8 @@ export const avengersQueries = {
     FROM users.wallets 
     WHERE "userId" = $1;
   `,
-  
-getFirstDepositTime: `
+
+  getFirstDepositTime: `
   SELECT "timestamp"
   FROM users.deposits
   WHERE "userId" = $1

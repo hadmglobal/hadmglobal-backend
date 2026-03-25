@@ -60,9 +60,11 @@ export const registerUser = async (req, res) => {
         userQueries.appendFirstGen,
         userQueries.appendSecondGen,
         userQueries.appendThirdGen,
+        userQueries.appendFourthGen,
+        userQueries.appendFifthGen
       ];
 
-      for (let gen = 0; gen < 3; gen++) {
+      for (let gen = 0; gen < 5; gen++) {
         if (!currentReferralCode) break;
 
         // fetch the user who owns this referral code, alias returns lowercase keys
@@ -96,6 +98,7 @@ export const registerUser = async (req, res) => {
         email,
         refferalCode: refferalCode,
         refferedCode: refferedCode || null,
+        profilePic
       },
     });
 

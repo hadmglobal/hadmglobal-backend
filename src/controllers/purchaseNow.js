@@ -54,11 +54,11 @@ export const purchaseNow = async (req, res) => {
       const userResult = await pool.query(userQueries.getUserById, [userId]);
       const userEmail = userResult.rows[0].email;
       await pool.query(
-      `INSERT INTO users.rewards
+        `INSERT INTO users.rewards
        ("receiverUserId","receiverEmail","senderUserId","commission","senderEmail")
        VALUES ($1,$2,$3,$4,$5)`,
-      [userId, userEmail, userId, bonus, userEmail]
-     );
+        [userId, userEmail, userId, bonus, userEmail]
+      );
 
       return res.status(200).json({
         statusCode: 200,
@@ -79,7 +79,8 @@ export const purchaseNow = async (req, res) => {
       Level1: { min: 60, max: 500 },
       Level2: { min: 501, max: 900 },
       Level3: { min: 901, max: 1500 },
-      Level4: { min: 1501, max: 4000 },
+      Level4: { min: 1501, max: 3000 },
+      Level5: { min: 3001, max: 5000 },
     };
 
     const range = levelRanges[Level];
@@ -99,7 +100,7 @@ export const purchaseNow = async (req, res) => {
       });
     }
     let purchaseAmount = roundToTwoDecimals(deposits);
-     if (deposits > range.max) {
+    if (deposits > range.max) {
       purchaseAmount = roundToTwoDecimals(range.max);
     }
     // 6️⃣ Update wallet for level purchase

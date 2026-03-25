@@ -54,7 +54,7 @@ export const activateGame = async (req, res) => {
     }
 
     const totalCommission = roundToTwoDecimals((purchaseAmount * levelRate) / 100);
- 
+
     // 4️⃣ Fetch user → get referral chain
     const meRes = await client.query(
       `SELECT "refferedCode","email" FROM users.userDetails WHERE "userId" = $1`,
@@ -83,13 +83,13 @@ export const activateGame = async (req, res) => {
     }
 
     // 5️⃣ Gen commissions
-    const genPercents = { 1: 5, 2: 4, 3: 2 };
+    const genPercents = { 1: 6, 2: 5, 3: 4, 4: 3, 5: 2 };
     const genBonuses = {};
 
     uplines.forEach(up => {
       genBonuses[up.gen] = roundToTwoDecimals((totalCommission * genPercents[up.gen]) / 100);
     });
- 
+
     // User gets full base commission (only direct game earnings)
     const userShare = totalCommission;
 
@@ -152,7 +152,7 @@ export const activateGame = async (req, res) => {
         userShare,
         genBonuses,
         uplines,
-        userTodaysCommission:userShare,
+        userTodaysCommission: userShare,
         lastActivatedAt: nowTimestamp,
         nextActivation: "After 24 hours",
       },

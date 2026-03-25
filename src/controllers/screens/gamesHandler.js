@@ -45,7 +45,8 @@ export const gamesHandler = async (userId) => {
       Level1: { min: 60, max: 500 },
       Level2: { min: 501, max: 900 },
       Level3: { min: 901, max: 1500 },
-      Level4: { min: 1501}
+      Level4: { min: 1501, max: 3000 },
+      Level5: { min: 3001, max: 5000 }
     };
 
     // Determine eligible level
