@@ -11,21 +11,27 @@ import { userQueries } from "../helpers/queries.js";
 import { Dashboard } from './screens/dashboardHandler.js';
 import { commissionHandler } from './screens/commissionHandler.js';
 import { profileHandler } from './screens/profileHandler.js';
+import { handleTaskManagerScreen } from './screens/taskManagerHandler.js';
+import { handleClaimReward } from './screens/claimRewardHandler.js';
 export const avengersController = async (req, res) => {
-  const { userId, screen, isAdmin = false } = req.body;
-
   try {
-    if (!userId || !screen) {
+    const { userId, screen, isAdmin = false, task } = req.body;
+
+    if (!userId || (!screen && !task)) {
       return res.status(400).json({
         statusCode: 400,
-        message: "userId and screen are required",
+        message: "userId and screen (or task) are required",
         data: null,
       });
     }
 
     let response;
+    
+    // Default to claimReward if task is present but screen is missing
+    let effectiveScreen = screen;
+    if (!effectiveScreen && task) effectiveScreen = "claimReward";
 
-    switch (screen) {
+    switch (effectiveScreen) {
       case "game":
         response = await gamesHandler(userId);
         break;
@@ -82,6 +88,12 @@ export const avengersController = async (req, res) => {
         break;
       case "Dashboard":
         response = await Dashboard();
+        break;
+      case "taskmanager":
+        response = await handleTaskManagerScreen(userId);
+        break;
+      case "claimReward":
+        response = await handleClaimReward(userId, task);
         break;
       default:
         response = {

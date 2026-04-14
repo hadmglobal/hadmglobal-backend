@@ -1,14 +1,14 @@
 import bcrypt from 'bcryptjs';
 import { pool } from '../db.js';
 import { generateReferralCode, generateUserId } from "../helpers/generateReferralCode.js";
-import { isValidEmail, isValidPasscode, isStrongPassword } from "../helpers/validations.js";
+import { isValidEmail } from "../helpers/validations.js";
 import { userQueries } from "../helpers/queries.js";
 import { emailVerify } from './emailVerify.js';
 export const registerUser = async (req, res) => {
-  const { userName, email, password, refferedCode, passcode } = req.body;
+  const { userName, email, password, refferedCode } = req.body;
 
   // validations (same as you had)
-  if (!userName || !email || !password || !passcode) {
+  if (!userName || !email || !password) {
     return res.status(400).json({ message: "All required fields must be provided." });
   }
   if (!isValidEmail(email)) return res.status(400).json({ message: "Invalid email format." });
@@ -42,10 +42,12 @@ export const registerUser = async (req, res) => {
 
     // 4. Insert new user
     if (!isEmailVerify && isEmailVerify !== undefined) {
-      const values = [userName, hashedPassword, refferedCode || null, passcode, refferalCode, email];
+      // Provide null for passcode to match userQueries.updateExistingUser (6 parameters)
+      const values = [userName, hashedPassword, refferedCode || null, refferalCode, email];
       const insertRes = await client.query(userQueries.updateExistingUser, values);
     } else {
-      const values = [userId, userName, email, hashedPassword, refferedCode || null, passcode, refferalCode];
+      // Provide null for passcode to match userQueries.insertUser (7 parameters)
+      const values = [userId, userName, email, hashedPassword, refferedCode || null, refferalCode];
       const insertRes = await client.query(userQueries.insertUser, values);
     }
     // get inserted user if needed: insertRes.rows[0]
@@ -98,7 +100,7 @@ export const registerUser = async (req, res) => {
         email,
         refferalCode: refferalCode,
         refferedCode: refferedCode || null,
-        profilePic
+        profilePic: 1
       },
     });
 

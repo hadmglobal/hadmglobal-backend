@@ -28,11 +28,11 @@ export const getTeamsData = async (userId, isAdmin) => {
           totalPromationComission: 0,
           teamRecharge: 0,
           teamWitdrawls: 0,
-          genOne: { reffered: 0, valid: 0 },
-          genTwo: { reffered: 0, valid: 0 },
-          genThree: { reffered: 0, valid: 0 },
-          genFour: { reffered: 0, valid: 0 },
-          genFive: { reffered: 0, valid: 0 },
+          genOne: { reffered: 0, valid: 0, commission: 0, teamRecharge: 0 },
+          genTwo: { reffered: 0, valid: 0, commission: 0, teamRecharge: 0 },
+          genThree: { reffered: 0, valid: 0, commission: 0, teamRecharge: 0 },
+          genFour: { reffered: 0, valid: 0, commission: 0, teamRecharge: 0 },
+          genFive: { reffered: 0, valid: 0, commission: 0, teamRecharge: 0 },
         },
       };
     }

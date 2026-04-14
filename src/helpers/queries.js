@@ -8,8 +8,8 @@ export const userQueries = {
   // Insert new user
   insertUser: `
     INSERT INTO users.userDetails
-      ("userId", "userName", "email", "password", "refferedCode", "passcode", "refferalCode","isVerified")
-    VALUES ($1, $2, $3, $4, $5, $6, $7,true)
+      ("userId", "userName", "email", "password", "refferedCode", "refferalCode","isVerified")
+    VALUES ($1, $2, $3, $4, $5, $6,true)
     RETURNING *;
   `,
   //update new user 
@@ -18,10 +18,9 @@ SET
   "userName" = $1,
   "password" = $2,
   "refferedCode" = $3,
-  "passcode" = $4,
-  "refferalCode" = $5,
+  "refferalCode" = $4,
   "isVerified" = true
-WHERE "email" = $6
+WHERE "email" = $5
 RETURNING *;
 `,
 
